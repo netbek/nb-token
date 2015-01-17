@@ -41,8 +41,8 @@
 		var initialized = false;
 
 		return {
-			$get: ['$rootScope', '$q', '_', 'I18N', 'nbTokenConfig',
-				function ($rootScope, $q, _, I18N, nbTokenConfig) {
+			$get: ['$rootScope', '$q', '_', 'nbI18N', 'nbTokenConfig',
+				function ($rootScope, $q, _, nbI18N, nbTokenConfig) {
 					// Bind events.
 					$rootScope.$on('$stateChangeStart', function () {
 						reset();
@@ -68,7 +68,7 @@
 						else {
 							if (angular.isDefined(path)) {
 								var key = path.join(nbTokenConfig.delimiter);
-								replace['[' + key + ']'] = I18N.t('@value', {'@value': obj});
+								replace['[' + key + ']'] = nbI18N.t('@value', {'@value': obj});
 							}
 						}
 
