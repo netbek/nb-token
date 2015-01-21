@@ -18,5 +18,9 @@
 		"test",
 		"tests",
 		"vendor"
-	]
+	],
+	"dependencies": {
+		"nb-i18n": "https://github.com/netbek/nb-i18n.git#master",
+		"nb-lodash": "https://github.com/netbek/nb-lodash.git#master"
+	}
 }
