@@ -1,0 +1,22 @@
+{
+	"name": "nb-token",
+	"version": "0.0.1",
+	"description": "AngularJS service for tokens",
+	"homepage": "https://github.com/netbek/nb-token",
+	"author": {
+		"name": "Hein Bekker",
+		"email": "hein@netbek.co.za",
+		"url": "http://netbek.co.za"
+	},
+	"license": {
+		"type": "AGPLv3",
+		"url": "http://www.gnu.org/licenses/agpl-3.0.txt"
+	},
+	"ignore": [
+		"bower_components",
+		"node_modules",
+		"test",
+		"tests",
+		"vendor"
+	]
+}
