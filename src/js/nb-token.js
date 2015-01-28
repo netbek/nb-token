@@ -144,7 +144,14 @@
 
 							return d.promise;
 						},
-						reset: reset,
+						/**
+						 *
+						 * @returns {nbToken}
+						 */
+						reset: function () {
+							reset();
+							return this;
+						},
 						replace: replace,
 						/**
 						 * Gets the replacement value of a token.
@@ -169,18 +176,21 @@
 						 *
 						 * @param {string} token Path to value, e.g. a.b.c
 						 * @param {string} value
-						 * @returns object
+						 * @returns {nbToken}
 						 */
 						set: function (token, value) {
-							return _.set($rootScope.tokens, token, value, nbTokenConfig.delimiter);
+							_.set($rootScope.tokens, token, value, nbTokenConfig.delimiter);
+							return this;
 						},
 						/**
 						 * Sets the replacement value of a token to undefined.
 						 *
 						 * @param {string} token Path to value, e.g. a.b.c
+						 * @returns {nbToken}
 						 */
 						clear: function (token) {
-							return _.set($rootScope.tokens, token, undefined);
+							_.set($rootScope.tokens, token, undefined);
+							return this;
 						}
 					};
 				}
