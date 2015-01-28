@@ -11,8 +11,7 @@
 
 	angular
 		.module('nb.token', [
-			'nb.lodash',
-			'nb.i18n'
+			'nb.lodash'
 		])
 		.provider('nbToken', nbToken)
 		.provider('nbTokenConfig', nbTokenConfig);
