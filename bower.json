@@ -22,7 +22,6 @@
 	"dependencies": {
 		"angular": "~1.2.28",
 		"merge": "master",
-		"nb-i18n": "https://github.com/netbek/nb-i18n.git#master",
 		"nb-lodash": "https://github.com/netbek/nb-lodash.git#master"
 	}
 }

@@ -41,66 +41,79 @@
 		var initialized = false;
 
 		return {
-			$get: ['$rootScope', '$q', '_', 'nbI18N', 'nbTokenConfig',
-				function ($rootScope, $q, _, nbI18N, nbTokenConfig) {
-					// Bind events.
+			$get: ['$rootScope', '$q', '_', 'nbTokenConfig',
+				function ($rootScope, $q, _, nbTokenConfig) {
+					// Reset the replacement values of all tokens to their default value at the start of a state change.
 					$rootScope.$on('$stateChangeStart', function () {
 						reset();
 					});
 
 					/**
+					 * Builds a list of search and replacement values from a nested object.
 					 *
 					 * @param {object|array} obj
 					 * @param {string} path
 					 * @returns {object}
 					 */
-					function getReplaceTokens (obj, path) {
-						var replace = {};
+					function generate (obj, path) {
+						var replacements = {};
 
 						if (angular.isObject(obj) && !angular.isArray(obj)) {
 							if (angular.isUndefined(path)) {
 								path = [];
 							}
 							angular.forEach(obj, function (value, key) {
-								_.extend(replace, getReplaceTokens(value, [].concat(path, key)));
+								_.extend(replacements, generate(value, [].concat(path, key)));
 							});
 						}
 						else {
 							if (angular.isDefined(path)) {
 								var key = path.join(nbTokenConfig.delimiter);
-								replace['[' + key + ']'] = nbI18N.t('@value', {'@value': obj});
+								replacements['[' + key + ']'] = obj;
 							}
 						}
 
-						return replace;
+						return replacements;
 					}
 
 					/**
-					 * Replaces tokens with values.
+					 * Replaces tokens in a given object or string with appropriate values.
 					 *
 					 * @param {mixed} obj
-					 * @param {object} tokens
-					 * @returns {mixed}
+					 * @param {object} data Replacement values as a nested object. If undefined, then the root scope token replacement values are used.
+					 * @returns {String}
 					 */
-					function replace (obj, tokens) {
+					function replace (obj, data) {
 						if (angular.isUndefined(obj)) {
 							return obj;
 						}
 
-						if (angular.isUndefined(tokens)) {
-							tokens = getReplaceTokens($rootScope.tokens);
+						var replacements = generate(angular.isDefined(data) ? data : $rootScope.tokens);
+
+						return _replace(obj, replacements);
+					}
+
+					/***
+					 * Replaces tokens in a given object or string with appropriate values.
+					 *
+					 * @param {mixed} obj
+					 * @param {array} replacements
+					 * @returns {mixed}
+					 */
+					function _replace (obj, replacements) {
+						if (angular.isUndefined(obj)) {
+							return obj;
 						}
 
 						if (angular.isObject(obj)) {
 							angular.forEach(obj, function (value, key) {
-								obj[key] = replace(value, tokens);
+								obj[key] = _replace(value, replacements);
 							});
 						}
 						else {
 							obj = obj.toString();
-
-							angular.forEach(tokens, function (value, key) {
-								obj = obj.replace(key, value);
+							angular.forEach(replacements, function (value, key) {
+								obj = obj.replace(key, angular.isDefined(value) ? value : '');
 							});
 						}
 
@@ -108,7 +121,7 @@
 					}
 
 					/**
-					 * Resets tokens to default values.
+					 * Resets the replacement values of all tokens to their default value.
 					 */
 					function reset () {
 						$rootScope.tokens = _.cloneDeep(nbTokenConfig.defaults);
@@ -131,11 +144,10 @@
 
 							return d.promise;
 						},
-						/**
-						 *
-						 */
 						reset: reset,
+						replace: replace,
 						/**
+						 * Gets the replacement value of a token.
 						 *
 						 * @param {string} token Path to value, e.g. a.b.c
 						 * @param {string} defaultValue
@@ -145,6 +157,7 @@
 							return _.get($rootScope.tokens, token, defaultValue, nbTokenConfig.delimiter);
 						},
 						/**
+						 * Gets the replacement values of all tokens.
 						 *
 						 * @returns {object}
 						 */
@@ -152,6 +165,7 @@
 							return $rootScope.tokens;
 						},
 						/**
+						 * Sets the replacement value of a token.
 						 *
 						 * @param {string} token Path to value, e.g. a.b.c
 						 * @param {string} value
@@ -161,10 +175,7 @@
 							return _.set($rootScope.tokens, token, value, nbTokenConfig.delimiter);
 						},
 						/**
-						 *
-						 */
-						replace: replace,
-						/**
+						 * Sets the replacement value of a token to undefined.
 						 *
 						 * @param {string} token Path to value, e.g. a.b.c
 						 */
