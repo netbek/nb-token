@@ -18,11 +18,11 @@
 
 	function nbTokenConfig () {
 		var config = {
-			delimiter: ':', // Token path delimiter
-			defaults: {
-				site: {
-					name: undefined,
-					slogan: undefined
+			'delimiter': ':', // Token path delimiter
+			'defaults': {
+				'site': {
+					'name': undefined,
+					'slogan': undefined
 				}
 			}
 		};
