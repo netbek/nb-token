@@ -17,7 +17,8 @@
 		"node_modules",
 		"test",
 		"tests",
-		"vendor"
+		"vendor",
+		"src"
 	],
 	"dependencies": {
 		"angularjs": "~1.3.13",
